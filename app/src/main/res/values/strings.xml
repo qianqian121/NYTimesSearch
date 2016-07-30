@@ -2,4 +2,12 @@
     <string name="app_name">NYTimesSearch</string>
     <string name="action_settings">Settings</string>
     <string name="search">Search</string>
+    <string name="filer">Filter</string>
+    <string name="beginDate">Begin Date</string>
+    <string name="sortOrder">Sort Order</string>
+    <string name="arts">Arts</string>
+    <string name="fasion"><![CDATA[Fasion & Style]]></string>
+    <string name="sports">Sports</string>
+    <string name="newsDesk">News Desk Values</string>
+    <string name="save">Save</string>
 </resources>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:weightSum="1">
+
+    <TableLayout
+        android:orientation="vertical" android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/beginDate"
+                android:id="@+id/tvBeginDate"
+                android:layout_gravity="center_vertical" />
+
+            <DatePicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/datePicker2"
+                android:datePickerMode="spinner"
+                android:calendarViewShown="false"
+                android:layout_column="2"
+                android:layout_marginLeft="1dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/sortOrder"
+                android:id="@+id/tvSortOrder" />
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New ToggleButton"
+                android:id="@+id/toggleButton"
+                android:layout_column="2"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="10dp"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="25dp">
+
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/newsDesk"
+                android:id="@+id/textView"
+                android:layout_column="0"
+                android:layout_width="100sp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2">
+
+                <CheckBox
+                    android:text="@string/arts"
+                    android:id="@+id/checkBox"
+                    android:checked="false"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content" />
+
+                <CheckBox
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/fasion"
+                    android:id="@+id/checkBox2"
+                    android:checked="false" />
+
+                <CheckBox
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/sports"
+                    android:id="@+id/checkBox3"
+                    android:checked="false" />
+            </LinearLayout>
+        </TableRow>
+
+    </TableLayout>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="125dp"
+        android:layout_marginRight="125dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:text="@string/save"
+            android:id="@+id/button" />
+    </TableRow>
+
+</LinearLayout>

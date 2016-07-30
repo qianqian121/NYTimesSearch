@@ -4,6 +4,14 @@
     tools:context="com.codepath.nytimessearch.SearchActivity">
 
     <item
+        android:id="@+id/miFilter"
+        android:orderInCategory="5"
+        android:icon="@drawable/ic_sort_black_24dp"
+        android:onClick="onClickFilter"
+        app:showAsAction="ifRoom"
+        android:title="@string/filer" />
+
+    <item
         android:id="@+id/miSearch"
         android:orderInCategory="5"
         android:icon="@drawable/ic_search_black_24dp"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.nytimessearch.adapter.ArticleAdapter;
+import com.codepath.nytimessearch.fragments.SetFilterFragment;
 import com.codepath.nytimessearch.models.Article;
 import com.codepath.nytimessearch.models.Doc;
 import com.codepath.nytimessearch.network.NetworkRequest;
@@ -63,9 +65,16 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "click articles", Toast.LENGTH_SHORT).show();
+                FragmentManager fm = getSupportFragmentManager();
+                SetFilterFragment editNameDialogFragment = new SetFilterFragment();
+                editNameDialogFragment.show(fm, "activity_edit_item");
             }
         });
         rvItems.setAdapter(mArticleAdapter);
+    }
+
+    public void onClickFilter(MenuItem item) {
+
     }
 
     private Boolean isNetworkAvailable() {
