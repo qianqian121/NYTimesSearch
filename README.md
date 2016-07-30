@@ -1,3 +1,4 @@
+# Project 2 - *NYTimesSearch*
 
 **Name of your app** is an android app that allows a user to search for articles on web using simple filters. The app utilizes [New York Times Search API](http://developer.nytimes.com/docs/read/article_search_api_v2).
 
@@ -61,6 +62,7 @@ Describe any challenges encountered while building the app.
 
 ## License
 
+    Copyright [2016] [Mike Qi]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
