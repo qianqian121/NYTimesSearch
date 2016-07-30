@@ -62,7 +62,9 @@ public class SearchActivity extends AppCompatActivity {
         mGridLayoutManager =
                 new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
 // Attach the layout manager to the recycler view
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvItems.setLayoutManager(mGridLayoutManager);
+//        rvItems.setLayoutManager(linearLayoutManager);
         mDocs = new ArrayList<>();
         mArticleAdapter = new ArticleAdapter(mDocs);
         mArticleAdapter.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +167,8 @@ public class SearchActivity extends AppCompatActivity {
 //                .baseUrl(BASE_URL)
 //                .addConverterFactory(GsonConverterFactory.create())
 //                .build();
-        for (int p = 1; p < pages; p++) {
+        int curSize = mArticleAdapter.getItemCount();
+        for (int p = 1; p < pages && onFirstLoad; p++) {
             RestAPI api = RestAPIBuilder.buildRetrofitService();
             mGetPostSubscription = NetworkRequest.performAsyncRequest(api.getPost(), (data) -> {
                 // Update UI on the main thread
@@ -200,7 +203,7 @@ public class SearchActivity extends AppCompatActivity {
                 mArticleAdapter.notifyDataSetChanged();
             }
             else {
-                int curSize = mArticleAdapter.getItemCount();
+//                int curSize = mArticleAdapter.getItemCount();
                 mArticleAdapter.notifyItemRangeChanged(curSize, mDocs.size() - 1);
             }
         }, (error) -> {
