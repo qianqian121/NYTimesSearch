@@ -88,7 +88,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ArticleViewHolder vh = (ArticleViewHolder) holder;
             vh.tvTitle.setText(doc.getHeadline().getMain());
             String imgUrl = "http://www.nytimes.com/" + doc.getMultimedia().get(0).getUrl();
-            Picasso.with(vh.itemView.getContext()).load(imgUrl).transform(new RoundedCornersTransformation(10, 10)).into(vh.ivImage);
+            Picasso.with(vh.itemView.getContext()).load(imgUrl).transform(new RoundedCornersTransformation(10, 10)).placeholder(R.drawable.loading).into(vh.ivImage);
         }
     }
 

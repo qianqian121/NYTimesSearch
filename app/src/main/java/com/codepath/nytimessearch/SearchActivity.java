@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.codepath.nytimessearch.activities.ArticleActivity;
 import com.codepath.nytimessearch.adapter.ArticleAdapter;
+import com.codepath.nytimessearch.adapter.EndlessRecyclerViewScrollListener;
 import com.codepath.nytimessearch.fragments.SetFilterFragment;
 import com.codepath.nytimessearch.models.Article;
 import com.codepath.nytimessearch.models.Doc;
@@ -45,6 +46,7 @@ public class SearchActivity extends AppCompatActivity {
 //    R.layout.content_search
     List<Doc> mDocs;
     ArticleAdapter mArticleAdapter;
+    StaggeredGridLayoutManager mGridLayoutManager;
 
     private Subscription mGetPostSubscription;
 
@@ -57,10 +59,10 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayShowTitleEnabled(false);
         // First param is number of columns and second param is orientation i.e Vertical or Horizontal
-        StaggeredGridLayoutManager gridLayoutManager =
+        mGridLayoutManager =
                 new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
 // Attach the layout manager to the recycler view
-        rvItems.setLayoutManager(gridLayoutManager);
+        rvItems.setLayoutManager(mGridLayoutManager);
         mDocs = new ArrayList<>();
         mArticleAdapter = new ArticleAdapter(mDocs);
         mArticleAdapter.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +76,31 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
         rvItems.setAdapter(mArticleAdapter);
+//        rvItems.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount) {
+//                Toast.makeText(getApplicationContext(), "loading more articles", Toast.LENGTH_SHORT).show();
+//
+////                RestAPI api = RestAPIBuilder.buildRetrofitService();
+////                mGetPostSubscription = NetworkRequest.performAsyncRequest(api.getPost(), (data) -> {
+////                    // Update UI on the main thread
+////                    loadMorePost(data);
+////                }, (error) -> {
+////                    // Handle error
+////                    Log.d("TAG", "error");
+////                });
+//                fetchArticlePage(0, 10, false);
+//            }
+//        });
+    }
+
+    private void loadMorePost(Article doc) {
+        Toast.makeText(getApplicationContext(), "more articles", Toast.LENGTH_SHORT).show();
+        int curSize = mArticleAdapter.getItemCount();
+        mDocs.addAll(doc.getResponse().getDocs());
+        mArticleAdapter.notifyItemRangeChanged(curSize, mDocs.size() - 1);
+//        mTitle.setText("Title: " + post.getTitle());
+//        mBody.setText("Body: " + post.getBody());
     }
 
     public void onClickFilter(MenuItem item) {
@@ -130,6 +157,66 @@ public class SearchActivity extends AppCompatActivity {
 //        mBody.setText("Body: " + post.getBody());
     }
 
+    public void fetchArticlePage(int offset, int pages, boolean onFirstLoad) {
+//        RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
+        // Trailing slash is needed
+//        final String BASE_URL = "http://api.myservice.com/";
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(BASE_URL)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+        for (int p = 1; p < pages; p++) {
+            RestAPI api = RestAPIBuilder.buildRetrofitService();
+            mGetPostSubscription = NetworkRequest.performAsyncRequest(api.getPost(), (data) -> {
+                // Update UI on the main thread
+                addPost(data);
+            }, (error) -> {
+                // Handle error
+                Log.d("TAG", "error");
+            });
+        }
+        RestAPI api = RestAPIBuilder.buildRetrofitService();
+        mGetPostSubscription = NetworkRequest.performAsyncRequest(api.getPost(), (data) -> {
+            // Update UI on the main thread
+            addPost(data);
+            if (onFirstLoad) {
+//                mArticleAdapter.notifyDataSetChanged();
+                rvItems.addOnScrollListener(new EndlessRecyclerViewScrollListener(mGridLayoutManager) {
+                    @Override
+                    public void onLoadMore(int page, int totalItemsCount) {
+                        Toast.makeText(getApplicationContext(), "loading more articles", Toast.LENGTH_SHORT).show();
+
+//                RestAPI api = RestAPIBuilder.buildRetrofitService();
+//                mGetPostSubscription = NetworkRequest.performAsyncRequest(api.getPost(), (data) -> {
+//                    // Update UI on the main thread
+//                    loadMorePost(data);
+//                }, (error) -> {
+//                    // Handle error
+//                    Log.d("TAG", "error");
+//                });
+                        fetchArticlePage(0, 10, false);
+                    }
+                });
+                mArticleAdapter.notifyDataSetChanged();
+            }
+            else {
+                int curSize = mArticleAdapter.getItemCount();
+                mArticleAdapter.notifyItemRangeChanged(curSize, mDocs.size() - 1);
+            }
+        }, (error) -> {
+            // Handle error
+            Log.d("TAG", "error");
+        });
+    }
+
+    private void addPost(Article doc) {
+//        Toast.makeText(getApplicationContext(), "display articles", Toast.LENGTH_SHORT).show();
+        mDocs.addAll(doc.getResponse().getDocs());
+//        mArticleAdapter.notifyDataSetChanged();
+//        mTitle.setText("Title: " + post.getTitle());
+//        mBody.setText("Body: " + post.getBody());
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -152,11 +239,12 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 // perform query here
                 Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
-                getArticles();
+//                getArticles();
+                fetchArticlePage(0, 10, true);
+
                 // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
                 // see https://code.google.com/p/android/issues/detail?id=24599
                 searchView.clearFocus();
-
                 return true;
             }
 
