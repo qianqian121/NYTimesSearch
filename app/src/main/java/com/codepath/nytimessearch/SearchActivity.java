@@ -1,6 +1,7 @@
 package com.codepath.nytimessearch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.codepath.nytimessearch.activities.ArticleActivity;
 import com.codepath.nytimessearch.adapter.ArticleAdapter;
 import com.codepath.nytimessearch.fragments.SetFilterFragment;
 import com.codepath.nytimessearch.models.Article;
@@ -65,16 +67,20 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "click articles", Toast.LENGTH_SHORT).show();
-                FragmentManager fm = getSupportFragmentManager();
-                SetFilterFragment editNameDialogFragment = new SetFilterFragment();
-                editNameDialogFragment.show(fm, "activity_edit_item");
+                Intent intent = new Intent(getApplicationContext(), ArticleActivity.class);
+                Doc doc = mDocs.get(rvItems.getChildAdapterPosition(view));
+                intent.putExtra("webUrl", doc.getweb_url());
+                startActivity(intent);
             }
         });
         rvItems.setAdapter(mArticleAdapter);
     }
 
     public void onClickFilter(MenuItem item) {
-
+        Toast.makeText(getApplicationContext(), "Set Filter", Toast.LENGTH_SHORT).show();
+        FragmentManager fm = getSupportFragmentManager();
+        SetFilterFragment editNameDialogFragment = new SetFilterFragment();
+        editNameDialogFragment.show(fm, "activity_edit_item");
     }
 
     private Boolean isNetworkAvailable() {
