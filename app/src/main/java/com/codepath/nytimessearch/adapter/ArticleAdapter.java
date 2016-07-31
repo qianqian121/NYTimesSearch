@@ -43,7 +43,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             articleViewHolder = new ArticleViewHolderSimple(articleView);
         }else {
             articleView = inflater.inflate(R.layout.item_article_result, parent, false);
+//            ViewDataBinding binding = DataBindingUtil.inflate(inflater, R.layout.item_article_result,
+//                    parent, false);
 
+//            articleViewHolder = new ArticleViewHolder(articleView, binding);
             articleViewHolder = new ArticleViewHolder(articleView);
         }
         articleView.setOnClickListener(view -> mOnClickListener.onClick(view));
@@ -81,7 +84,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             vh.tvTitle.setText(Html.fromHtml(formattedText));
         } else {
             ArticleViewHolder vh = (ArticleViewHolder) holder;
-            vh.tvTitle.setText(doc.getHeadline().getMain());
+//            vh.tvTitle.setText(doc.getHeadline().getMain());
+            vh.mBinding.setVariable(com.codepath.nytimessearch.BR.title, doc.getHeadline().getMain());
             String imgUrl = "http://www.nytimes.com/" + doc.getMultimedia().get(0).getUrl();
 //            Picasso.with(vh.itemView.getContext()).load(imgUrl).transform(new RoundedCornersTransformation(10, 10)).placeholder(R.drawable.loading).into(vh.ivImage);
             Glide.with(vh.itemView.getContext()).load(imgUrl).placeholder(R.drawable.loading).into(vh.ivImage);
