@@ -7,13 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.codepath.nytimessearch.R;
 import com.codepath.nytimessearch.models.Doc;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 /**
  * Created by qiming on 7/29/2016.
@@ -90,7 +88,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ArticleViewHolder vh = (ArticleViewHolder) holder;
             vh.tvTitle.setText(doc.getHeadline().getMain());
             String imgUrl = "http://www.nytimes.com/" + doc.getMultimedia().get(0).getUrl();
-            Picasso.with(vh.itemView.getContext()).load(imgUrl).transform(new RoundedCornersTransformation(10, 10)).placeholder(R.drawable.loading).into(vh.ivImage);
+//            Picasso.with(vh.itemView.getContext()).load(imgUrl).transform(new RoundedCornersTransformation(10, 10)).placeholder(R.drawable.loading).into(vh.ivImage);
+            Glide.with(vh.itemView.getContext()).load(imgUrl).placeholder(R.drawable.loading).into(vh.ivImage);
         }
     }
 
