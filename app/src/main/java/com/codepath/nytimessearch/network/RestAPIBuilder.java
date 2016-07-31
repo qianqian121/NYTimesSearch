@@ -55,11 +55,13 @@ public class RestAPIBuilder {
 					if (filter.getNewsDeskQuery().isEmpty()) {
 						url = chain.request().url().newBuilder()
 								.addQueryParameter("api-key", RestAPI.API_KEY)
+								.addQueryParameter("q", query)
 								.addQueryParameter("page", String.valueOf(page))
 								.build();
 					} else {
 						url = chain.request().url().newBuilder()
 								.addQueryParameter("api-key", RestAPI.API_KEY)
+								.addQueryParameter("q", query)
 								.addQueryParameter("page", String.valueOf(page))
 								.addQueryParameter("fp", filter.getNewsDeskQuery())
 								.build();
@@ -68,12 +70,14 @@ public class RestAPIBuilder {
 					if (filter.getNewsDeskQuery().isEmpty()) {
 						url = chain.request().url().newBuilder()
 								.addQueryParameter("api-key", RestAPI.API_KEY)
+								.addQueryParameter("q", query)
 								.addQueryParameter("begin_date", filter.getBeginDate())
 								.addQueryParameter("page", String.valueOf(page))
 								.build();
 					} else {
 						url = chain.request().url().newBuilder()
 								.addQueryParameter("api-key", RestAPI.API_KEY)
+								.addQueryParameter("q", query)
 								.addQueryParameter("begin_date", filter.getBeginDate())
 								.addQueryParameter("page", String.valueOf(page))
 								.addQueryParameter("fp", filter.getNewsDeskQuery())

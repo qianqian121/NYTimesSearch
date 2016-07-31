@@ -49,6 +49,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
     ArticleAdapter mArticleAdapter;
     StaggeredGridLayoutManager mGridLayoutManager;
     Filter mFilter;
+    int mPage;
 
     private Subscription mGetPostSubscription;
 
@@ -57,6 +58,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
+        mPage = 0;
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -162,7 +164,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
 //        mBody.setText("Body: " + post.getBody());
     }
 
-    public void fetchArticlePage(int offset, int pages, boolean onFirstLoad) {
+    public void fetchArticlePage(int offset, int pages, boolean onFirstLoad, String query) {
 //        RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
         // Trailing slash is needed
 //        final String BASE_URL = "http://api.myservice.com/";
@@ -172,7 +174,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
 //                .build();
         int curSize = mArticleAdapter.getItemCount();
         for (int p = 1; p < pages && onFirstLoad; p++) {
-            RestAPI api = RestAPIBuilder.buildRetrofitService(mFilter, "android", 0);
+            RestAPI api = RestAPIBuilder.buildRetrofitService(mFilter, query, mPage++);
             mGetPostSubscription = NetworkRequest.performAsyncRequest(api.getPost(), (data) -> {
                 // Update UI on the main thread
                 addPost(data);
@@ -181,7 +183,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
                 Log.d("TAG", "error");
             });
         }
-        RestAPI api = RestAPIBuilder.buildRetrofitService(mFilter, "android", 0);
+        RestAPI api = RestAPIBuilder.buildRetrofitService(mFilter, query, mPage++);
         mGetPostSubscription = NetworkRequest.performAsyncRequest(api.getPost(), (data) -> {
             // Update UI on the main thread
             addPost(data);
@@ -200,7 +202,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
 //                    // Handle error
 //                    Log.d("TAG", "error");
 //                });
-                        fetchArticlePage(0, 10, false);
+                        fetchArticlePage(mPage, 10, false, query);
                     }
                 });
                 mArticleAdapter.notifyDataSetChanged();
@@ -246,7 +248,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
                 // perform query here
                 Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
 //                getArticles();
-                fetchArticlePage(0, 10, true);
+                fetchArticlePage(0, 10, true, query);
 
                 // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
                 // see https://code.google.com/p/android/issues/detail?id=24599
