@@ -245,6 +245,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
                 Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
                 if (isNetworkAvailable()) {
 //                getArticles();
+                    mDocs.clear();
                     fetchArticlePage(0, 10, true, query);
 
                     // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
