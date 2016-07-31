@@ -1,11 +1,46 @@
 package com.codepath.nytimessearch.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import org.parceler.Parcels;
+
 /**
  * Created by qiming on 7/30/2016.
  */
-public class Filter {
+public class Filter implements Parcelable {
     String beginDate;
     String sortOrder;
+
+    protected Filter(Parcel in) {
+        beginDate = in.readString();
+        sortOrder = in.readString();
+    }
+
+    public static final Creator<Filter> CREATOR = new Creator<Filter>() {
+        @Override
+        public Filter createFromParcel(Parcel in) {
+            return new Filter(in);
+        }
+
+        @Override
+        public Filter[] newArray(int size) {
+            return new Filter[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.beginDate);
+        parcel.writeString(this.sortOrder);
+        parcel.writeParcelable(Parcels.wrap(this.newsDesk), i);
+    }
+
     class NewsDesk {
         String arts;
         String fashion;
@@ -36,6 +71,12 @@ public class Filter {
 
         String sports;
 
+        public NewsDesk() {
+            this.arts = "";
+            this.fashion = "";
+            this.sports = "";
+        }
+
         public NewsDesk(String arts, String fashion, String sports) {
             this.arts = arts;
             this.fashion = fashion;
@@ -60,7 +101,7 @@ public class Filter {
     public Filter() {
         this.beginDate = "";
         this.sortOrder = "";
-        this.newsDesk = null;
+        this.newsDesk = new NewsDesk();
     }
 
     public String getBeginDate() {

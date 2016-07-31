@@ -25,7 +25,7 @@
             <DatePicker
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/datePicker2"
+                android:id="@+id/dpBeginDate"
                 android:datePickerMode="spinner"
                 android:calendarViewShown="false"
                 android:layout_column="2"
@@ -50,10 +50,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New ToggleButton"
-                android:id="@+id/toggleButton"
+                android:id="@+id/tbSortOrder"
                 android:layout_column="2"
                 android:layout_marginLeft="1dp"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginRight="10dp"
+                android:checked="false" />
         </TableRow>
 
         <TableRow
@@ -66,7 +67,7 @@
             <TextView
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/newsDesk"
-                android:id="@+id/textView"
+                android:id="@+id/textNewsDesk"
                 android:layout_column="0"
                 android:layout_width="100sp" />
 
@@ -78,7 +79,7 @@
 
                 <CheckBox
                     android:text="@string/arts"
-                    android:id="@+id/checkBox"
+                    android:id="@+id/cbArts"
                     android:checked="false"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content" />
@@ -87,14 +88,14 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text="@string/fasion"
-                    android:id="@+id/checkBox2"
+                    android:id="@+id/cbFashion"
                     android:checked="false" />
 
                 <CheckBox
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text="@string/sports"
-                    android:id="@+id/checkBox3"
+                    android:id="@+id/cbSports"
                     android:checked="false" />
             </LinearLayout>
         </TableRow>
@@ -112,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_gravity="center"
             android:text="@string/save"
-            android:id="@+id/button" />
+            android:id="@+id/btnSave" />
     </TableRow>
 
 </LinearLayout>

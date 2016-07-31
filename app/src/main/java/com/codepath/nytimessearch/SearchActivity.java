@@ -24,6 +24,7 @@ import com.codepath.nytimessearch.adapter.EndlessRecyclerViewScrollListener;
 import com.codepath.nytimessearch.fragments.SetFilterFragment;
 import com.codepath.nytimessearch.models.Article;
 import com.codepath.nytimessearch.models.Doc;
+import com.codepath.nytimessearch.models.Filter;
 import com.codepath.nytimessearch.network.NetworkRequest;
 import com.codepath.nytimessearch.network.RestAPI;
 import com.codepath.nytimessearch.network.RestAPIBuilder;
@@ -47,6 +48,7 @@ public class SearchActivity extends AppCompatActivity {
     List<Doc> mDocs;
     ArticleAdapter mArticleAdapter;
     StaggeredGridLayoutManager mGridLayoutManager;
+    Filter mFilter;
 
     private Subscription mGetPostSubscription;
 
@@ -77,6 +79,7 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        mFilter = new Filter();
         rvItems.setAdapter(mArticleAdapter);
 //        rvItems.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
 //            @Override
@@ -169,7 +172,7 @@ public class SearchActivity extends AppCompatActivity {
 //                .build();
         int curSize = mArticleAdapter.getItemCount();
         for (int p = 1; p < pages && onFirstLoad; p++) {
-            RestAPI api = RestAPIBuilder.buildRetrofitService();
+            RestAPI api = RestAPIBuilder.buildRetrofitService(mFilter, "android", 0);
             mGetPostSubscription = NetworkRequest.performAsyncRequest(api.getPost(), (data) -> {
                 // Update UI on the main thread
                 addPost(data);
@@ -178,7 +181,7 @@ public class SearchActivity extends AppCompatActivity {
                 Log.d("TAG", "error");
             });
         }
-        RestAPI api = RestAPIBuilder.buildRetrofitService();
+        RestAPI api = RestAPIBuilder.buildRetrofitService(mFilter, "android", 0);
         mGetPostSubscription = NetworkRequest.performAsyncRequest(api.getPost(), (data) -> {
             // Update UI on the main thread
             addPost(data);
