@@ -54,7 +54,8 @@
                 android:layout_column="2"
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="10dp"
-                android:checked="false" />
+                android:textOff="newest"
+                android:textOn="oldest" />
         </TableRow>
 
         <TableRow

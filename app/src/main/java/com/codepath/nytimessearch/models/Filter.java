@@ -41,7 +41,7 @@ public class Filter implements Parcelable {
         parcel.writeParcelable(Parcels.wrap(this.newsDesk), i);
     }
 
-    class NewsDesk {
+    public class NewsDesk implements Parcelable {
         String arts;
         String fashion;
 
@@ -89,8 +89,46 @@ public class Filter implements Parcelable {
                 return "";
             return String.format("news_desk:(%s)", s);
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.arts);
+            dest.writeString(this.fashion);
+            dest.writeString(this.sports);
+        }
+
+        protected NewsDesk(Parcel in) {
+            this.arts = in.readString();
+            this.fashion = in.readString();
+            this.sports = in.readString();
+        }
+
+        public final Creator<NewsDesk> CREATOR = new Creator<NewsDesk>() {
+            @Override
+            public NewsDesk createFromParcel(Parcel source) {
+                return new NewsDesk(source);
+            }
+
+            @Override
+            public NewsDesk[] newArray(int size) {
+                return new NewsDesk[size];
+            }
+        };
     }
-    NewsDesk newsDesk;
+    public NewsDesk newsDesk;
+
+    public void update(Filter filter) {
+        this.beginDate = filter.getBeginDate();
+        this.sortOrder = filter.getSortOrder();
+        this.newsDesk.setArts(filter.getNewsDesk().getArts());
+        this.newsDesk.setFashion(filter.getNewsDesk().getFashion());
+        this.newsDesk.setSports(filter.getNewsDesk().getSports());
+    }
 
     public Filter(String beginDate, String sortOrder, NewsDesk newsDesk) {
         this.beginDate = beginDate;

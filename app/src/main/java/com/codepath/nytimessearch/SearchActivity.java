@@ -37,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Subscription;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements SetFilterFragment.SetFilterDialogListener{
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -111,8 +111,8 @@ public class SearchActivity extends AppCompatActivity {
     public void onClickFilter(MenuItem item) {
         Toast.makeText(getApplicationContext(), "Set Filter", Toast.LENGTH_SHORT).show();
         FragmentManager fm = getSupportFragmentManager();
-        SetFilterFragment editNameDialogFragment = new SetFilterFragment();
-        editNameDialogFragment.show(fm, "activity_edit_item");
+        SetFilterFragment setFilterFragment = SetFilterFragment.newInstance(mFilter);
+        setFilterFragment.show(fm, "fragment_set_filter");
     }
 
     private Boolean isNetworkAvailable() {
@@ -282,5 +282,12 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onFinishEditDialog(Filter filter) {
+//        mFilter = filter;
+        Toast.makeText(getApplicationContext(),"Save Filter", Toast.LENGTH_SHORT);
+        mFilter.update(filter);
     }
 }

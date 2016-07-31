@@ -1,6 +1,7 @@
 package com.codepath.nytimessearch.fragments;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -16,6 +17,9 @@ import com.codepath.nytimessearch.R;
 import com.codepath.nytimessearch.models.Filter;
 
 import org.parceler.Parcels;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +42,18 @@ public class SetFilterFragment extends DialogFragment {
     Button btnSave;
 
     Filter mFilter;
+    SetFilterDialogListener mSetFilterDialogListener;
+
+    public interface SetFilterDialogListener {
+        void onFinishEditDialog(Filter filter);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mSetFilterDialogListener = (SetFilterDialogListener) activity;
+    }
+
     /**
      * Called to have the fragment instantiate its user interface view.
      * This is optional, and non-graphical fragments can return null (which
@@ -78,11 +94,35 @@ public class SetFilterFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        mEditItem = (Item) getArguments().getSerializable("editItem");
-        mFilter = (Filter) getArguments().getParcelable("filter");
+        mFilter = (Filter) Parcels.unwrap(getArguments().getParcelable("filter"));
+        if (mFilter.getBeginDate().isEmpty()) {
+            Calendar calendar = Calendar.getInstance();
+            dpBeginDate.updateDate(calendar.get(Calendar.YEAR) - 1, calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        } else {
+            String beginDate = mFilter.getBeginDate();
+            dpBeginDate.updateDate(Integer.valueOf(beginDate.substring(0,4)),
+                    Integer.parseInt(beginDate.substring(4,6)) - 1, Integer.parseInt(beginDate.substring(6, 8)));
+        }
+        tbSortOrder.setChecked("oldest".equals(mFilter.getSortOrder()) ? true : false);
+        cbArts.setChecked(mFilter.getNewsDesk().getArts().isEmpty() ? false : true);
+        cbFashion.setChecked(mFilter.getNewsDesk().getFashion().isEmpty() ? false : true);
+        cbSports.setChecked(mFilter.getNewsDesk().getSports().isEmpty() ? false : true);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Calendar calendar= Calendar.getInstance();
+                calendar.set(dpBeginDate.getYear(),
+                        dpBeginDate.getMonth(),
+                        dpBeginDate.getDayOfMonth());
+                SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd");
+                String beginDate = dateformat.format(calendar.getTime());
+                mFilter.setBeginDate(beginDate);
+                mFilter.setSortOrder(String.valueOf(tbSortOrder.isChecked() ? "oldest" : "newest"));
+                mFilter.newsDesk.setArts(cbArts.isChecked() ? "Arts" : "");
+                mFilter.newsDesk.setFashion(cbFashion.isChecked() ? "Fashion" : "");
+                mFilter.newsDesk.setSports(cbSports.isChecked() ? "Sports" : "");
+                mSetFilterDialogListener.onFinishEditDialog(mFilter);
                 dismiss();
             }
         });
@@ -100,4 +140,7 @@ public class SetFilterFragment extends DialogFragment {
         return frag;
     }
 
+//    public void onClick(View view) {
+//        dismiss();
+//    }
 }
