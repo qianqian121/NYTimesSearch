@@ -243,13 +243,28 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
             public boolean onQueryTextSubmit(String query) {
                 // perform query here
                 Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
+                if (isNetworkAvailable()) {
 //                getArticles();
-                fetchArticlePage(0, 10, true, query);
+                    fetchArticlePage(0, 10, true, query);
 
-                // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
-                // see https://code.google.com/p/android/issues/detail?id=24599
-                searchView.clearFocus();
-                return true;
+                    // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
+                    // see https://code.google.com/p/android/issues/detail?id=24599
+                    searchView.clearFocus();
+                    return true;
+                } else {
+                    try {
+                        Process ipProcess = Runtime.getRuntime().exec("/system/bin/ping -c 1 8.8.8.8");
+                        int exitValue = ipProcess.waitFor();
+                        if (exitValue != 0) {
+                            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (IOException e) {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    } catch (InterruptedException e) {
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                    return false;
+                }
             }
 
             /**
