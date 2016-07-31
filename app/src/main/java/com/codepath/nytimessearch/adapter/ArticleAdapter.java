@@ -2,6 +2,7 @@ package com.codepath.nytimessearch.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +84,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // Simple
             ArticleViewHolderSimple vh = (ArticleViewHolderSimple) holder;
 //            vh.tvTitle.setText(doc.getweb_url());
-            vh.tvTitle.setText(doc.getHeadline().getMain());
+            String formattedText = String.format("<b><a href=''>%s</a></b>", doc.getHeadline().getMain());
+            vh.tvTitle.setText(Html.fromHtml(formattedText));
         } else {
             ArticleViewHolder vh = (ArticleViewHolder) holder;
             vh.tvTitle.setText(doc.getHeadline().getMain());

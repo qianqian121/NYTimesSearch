@@ -7,5 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Title"
+        android:autoLink="none"
+        android:textColorLink="@android:color/holo_blue_light"
         android:id="@+id/tvTitle" />
 </LinearLayout>
