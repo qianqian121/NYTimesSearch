@@ -13,13 +13,10 @@ public class NetworkRequest {
 	private static final String TAG = "NetworkRequest";
 
 	// Default error handling
-	private static Action1<Throwable> mOnError = new Action1<Throwable>() {
-		@Override
-		public void call(Throwable throwable) {
-			Log.e(TAG, throwable.getMessage());
-			throwable.printStackTrace();
-		}
-	};
+	private static Action1<Throwable> mOnError = throwable -> {
+        Log.e(TAG, throwable.getMessage());
+        throwable.printStackTrace();
+    };
 
 	public static <T> Subscription performAsyncRequest(Observable<T> observable, Action1<? super T> onAction) {
 		// Use default error handling

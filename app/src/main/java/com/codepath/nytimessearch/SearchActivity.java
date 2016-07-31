@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.nytimessearch.activities.ArticleActivity;
@@ -71,15 +70,12 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
 //        rvItems.setLayoutManager(linearLayoutManager);
         mDocs = new ArrayList<>();
         mArticleAdapter = new ArticleAdapter(mDocs);
-        mArticleAdapter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "click articles", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), ArticleActivity.class);
-                Doc doc = mDocs.get(rvItems.getChildAdapterPosition(view));
-                intent.putExtra("webUrl", doc.getweb_url());
-                startActivity(intent);
-            }
+        mArticleAdapter.setOnClickListener(view -> {
+            Toast.makeText(getApplicationContext(), "click articles", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), ArticleActivity.class);
+            Doc doc = mDocs.get(rvItems.getChildAdapterPosition(view));
+            intent.putExtra("webUrl", doc.getweb_url());
+            startActivity(intent);
         });
         mFilter = new Filter();
         rvItems.setAdapter(mArticleAdapter);

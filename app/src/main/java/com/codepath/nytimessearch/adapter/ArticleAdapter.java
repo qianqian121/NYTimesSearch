@@ -46,12 +46,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             articleViewHolder = new ArticleViewHolder(articleView);
         }
-        articleView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mOnClickListener.onClick(view);
-            }
-        });
+        articleView.setOnClickListener(view -> mOnClickListener.onClick(view));
         return articleViewHolder;
     }
 
