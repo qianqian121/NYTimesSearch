@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -37,20 +38,23 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import rx.Subscription;
 
-public class SearchActivity extends AppCompatActivity implements SetFilterFragment.SetFilterDialogListener{
+public class SearchActivity extends AppCompatActivity implements SetFilterFragment.SetFilterDialogListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.rvItems)
     RecyclerView rvItems;
 
-//    R.layout.content_search
+    //    R.layout.content_search
     List<Doc> mDocs;
     ArticleAdapter mArticleAdapter;
     StaggeredGridLayoutManager mGridLayoutManager;
     Filter mFilter;
     int mPage;
     ActionBar mActionBar;
+    String mQuery;
+    @BindView(R.id.swipeContainer)
+    SwipeRefreshLayout swipeContainer;
 
     private Subscription mGetPostSubscription;
 
@@ -99,6 +103,29 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
 //                fetchArticlePage(0, 10, false);
 //            }
 //        });
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchTimelineAsync(0);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+
+    public void fetchTimelineAsync(int page) {
+        // Send the network request to fetch the updated data
+        // `client` here is an instance of Android Async HTTP
+        mDocs.clear();
+        mArticleAdapter.notifyDataSetChanged();
+        fetchArticlePage(0, 10, true, mQuery, true);
     }
 
     private void loadMorePost(Article doc) {
@@ -164,7 +191,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
 //        mBody.setText("Body: " + post.getBody());
     }
 
-    public void fetchArticlePage(int offset, int pages, boolean onFirstLoad, String query) {
+    public void fetchArticlePage(int offset, int pages, boolean onFirstLoad, String query, boolean refresh) {
 //        RxJavaCallAdapterFactory rxAdapter = RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io());
         // Trailing slash is needed
 //        final String BASE_URL = "http://api.myservice.com/";
@@ -202,12 +229,13 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
 //                    // Handle error
 //                    Log.d("TAG", "error");
 //                });
-                        fetchArticlePage(mPage, 10, false, query);
+                        fetchArticlePage(mPage, 10, false, query, false);
                     }
                 });
                 mArticleAdapter.notifyDataSetChanged();
-            }
-            else {
+                if (refresh)
+                    swipeContainer.setRefreshing(false);
+            } else {
 //                int curSize = mArticleAdapter.getItemCount();
                 mArticleAdapter.notifyItemRangeChanged(curSize, mDocs.size() - 1);
             }
@@ -251,7 +279,8 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
 //                getArticles();
 
                     mDocs.clear();
-                    fetchArticlePage(0, 10, true, query);
+                    fetchArticlePage(0, 10, true, query, false);
+                    mQuery = query;
 
                     // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
                     // see https://code.google.com/p/android/issues/detail?id=24599
@@ -309,7 +338,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
     @Override
     public void onFinishEditDialog(Filter filter) {
 //        mFilter = filter;
-        Toast.makeText(getApplicationContext(),"Save Filter", Toast.LENGTH_SHORT);
+        Toast.makeText(getApplicationContext(), "Save Filter", Toast.LENGTH_SHORT);
         mFilter.update(filter);
     }
 }
