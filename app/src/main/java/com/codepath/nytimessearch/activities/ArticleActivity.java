@@ -3,6 +3,7 @@ package com.codepath.nytimessearch.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +34,9 @@ public class ArticleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         url = getIntent().getStringExtra("webUrl");
+        String title = getIntent().getStringExtra("title");
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(title);
         wvArticle.setWebViewClient(new WebViewClient() {
             /**
              * @param view

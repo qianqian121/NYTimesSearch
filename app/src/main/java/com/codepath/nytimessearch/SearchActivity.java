@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -49,6 +50,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
     StaggeredGridLayoutManager mGridLayoutManager;
     Filter mFilter;
     int mPage;
+    ActionBar mActionBar;
 
     private Subscription mGetPostSubscription;
 
@@ -57,6 +59,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
+//        mActionBar = getSupportActionBar();
         mPage = 0;
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,6 +78,7 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
             Intent intent = new Intent(getApplicationContext(), ArticleActivity.class);
             Doc doc = mDocs.get(rvItems.getChildAdapterPosition(view));
             intent.putExtra("webUrl", doc.getweb_url());
+            intent.putExtra("title", doc.getHeadline().getMain());
             startActivity(intent);
         });
         mFilter = new Filter();
@@ -245,12 +249,16 @@ public class SearchActivity extends AppCompatActivity implements SetFilterFragme
                 Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
                 if (isNetworkAvailable()) {
 //                getArticles();
+
                     mDocs.clear();
                     fetchArticlePage(0, 10, true, query);
 
                     // workaround to avoid issues with some emulators and keyboard devices firing twice if a keyboard enter is used
                     // see https://code.google.com/p/android/issues/detail?id=24599
                     searchView.clearFocus();
+                    if (mActionBar == null)
+                        mActionBar = getSupportActionBar();
+                    mActionBar.setTitle(query);
                     return true;
                 } else {
                     try {
