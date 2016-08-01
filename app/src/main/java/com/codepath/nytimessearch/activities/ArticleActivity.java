@@ -33,9 +33,15 @@ public class ArticleActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
         url = getIntent().getStringExtra("webUrl");
         String title = getIntent().getStringExtra("title");
-        ActionBar actionBar = getSupportActionBar();
+
         actionBar.setTitle(title);
         wvArticle.setWebViewClient(new WebViewClient() {
             /**
@@ -77,7 +83,9 @@ public class ArticleActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
         return super.onOptionsItemSelected(item);
     }
 }
